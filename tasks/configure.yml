@@ -16,7 +16,7 @@
     api_host: "{{ proxmox_host }}"
     api_user: "{{ proxmox_user }}"
     api_password: "{{ proxmox_password }}"
-    node: "{{ node}}"
+    node: "{{ node }}"
     name: "{{ vm_name|default(omit) }}"
     vmid: "{{ vm_vmid|default(omit) }}"
     cores: "{{ vm_cores|default(omit) }}"
@@ -31,7 +31,7 @@
     api_host: "{{ proxmox_host }}"
     api_user: "{{ proxmox_user }}"
     api_password: "{{ proxmox_password }}"
-    node: "{{ node}}"
+    node: "{{ node }}"
     name: "{{ vm_name }}"
     state: current
   register: status

@@ -11,7 +11,3 @@
     vmid: "{{ vm_vmid|default(omit) }}"
     state: absent
   register: results
-- name: wait remove
-  pause:
-    seconds: "{{ wait_remove|default(default_wait) }}"
-  when: results.changed

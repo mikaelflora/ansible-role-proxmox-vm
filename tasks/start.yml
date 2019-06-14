@@ -12,7 +12,3 @@
     vmid: "{{ vm_vmid|default(omit) }}"
     state: started
   register: results
-- name: wait start
-  pause:
-    seconds: "{{ wait_start|default(default_wait) }}"
-  when: results.changed

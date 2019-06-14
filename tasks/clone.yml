@@ -13,8 +13,6 @@
     name: "{{ vm_name|default(omit) }}"
     newid: "{{ vm_vmid|default(omit) }}"
     full: "{{ template_full }}"
-  register: results
 - name: wait clone
   pause:
     seconds: "{{ wait_clone|default(default_wait) }}"
-  when: results.changed

@@ -13,7 +13,3 @@
     state: stopped
     force: yes
   register: results
-- name: wait stop
-  pause:
-    seconds: "{{ wait_stop|default(default_wait) }}"
-  when: results.changed
