@@ -14,4 +14,4 @@
   register: results
 - name: print current status
   debug:
-    msg: "{{ vm_name|default(omit) }} ({{ vm_vmid|default(omit) }}): {{ results.status }}"
+    msg: "{{ vm_name|default('') }} ({{ vm_vmid|default('') }}): {{ results.status }}"

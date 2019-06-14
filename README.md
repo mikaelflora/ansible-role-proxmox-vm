@@ -6,11 +6,11 @@ Ansible role - manage VM via Proxmox API (clone, configure, start, stop and remo
 
 Tags:  
 
-  - up: clone, configure and start the VM
-  - halt: stop the VM
-  - reload: stop, reconfigure and start the VM
-  - destroy: stop and remove the VM
-  - status: get the current status of the VM
+  - **up:** clone, configure and start the VM
+  - **halt:** stop the VM
+  - **reload:** stop, reconfigure and start the VM
+  - **destroy:** stop and remove the VM
+  - **status:** get the current status of the VM
 
 ## Getting started with an example
 
@@ -75,12 +75,12 @@ ansible-playbook playbook.yml --tags destroy
 
 | Name | Type | Description |
 | --- | --- | --- |
-| `vm_user` | string | user name (cloud-init required) |
-| `vm_password` | string | user password (cloud-init required) |
-| `vm_sshkeys` | list of string | list of public SSH keys (OpenSSH format - cloud-init required) |
-| `vm_ipconfig0` | string | Ip address and gateway (ex: `ip=192.168.0.20/24,gw=192.168.0.254` - cloud-init required) |
-| `vm_nameserver` | string | DNS server IP address (ex: `8.8.8.8 8.8.4.4` - cloud-init required) |
-| `vm_searchdomain` | string | DNS search domains (ex: `google-public-dns-a.google.com` - cloud-init required) |
+| `vm_user` | string | user name (*cloud-init required*) |
+| `vm_password` | string | user password (*cloud-init required*) |
+| `vm_sshkeys` | list of string | list of public SSH keys (OpenSSH format - *cloud-init required*) |
+| `vm_ipconfig0` | string | Ip address and gateway (ex: `ip=192.168.0.20/24,gw=192.168.0.254` - *cloud-init required*) |
+| `vm_nameserver` | string | DNS server IP address (ex: `8.8.8.8 8.8.4.4` - *cloud-init required*) |
+| `vm_searchdomain` | string | DNS search domains (ex: `google-public-dns-a.google.com` - *cloud-init required*) |
 | `vm_sockets` | int | the number of CPU sockets (ex: `2`) |
 | `vm_cores` | int | the number of cores per socket (ex: `2`) |
 | `vm_memory` | int | amout of RAM for the VM in `MB` (ex: `512`, `1024`, `2048`) |
