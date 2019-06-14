@@ -1,0 +1,24 @@
+galaxy_info:
+  author: Mikael FLORA
+  role_name: proxmox-vm
+  description: Manage VM via Proxmox API (clone, configure, start, stop and remove).
+  license: GPLv3
+  min_ansible_version: 2.4
+  platforms:
+    - name: GenericLinux
+      version:
+        - any
+    - name: GenericUnix
+      version:
+        - any
+    - name: GenericBSD
+      version:
+        - any
+  galaxy_tags:
+    - proxmox
+    - pve
+    - virtualization
+    - vm
+    - kvm
+
+dependencies: []

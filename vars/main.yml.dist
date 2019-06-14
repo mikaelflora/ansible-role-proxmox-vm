@@ -1,0 +1,14 @@
+---
+# vars file for proxmox-vm
+proxmox_host: proxmox.lan
+proxmox_user: root@pam
+proxmox_password: password
+node: node1
+template_name: base
+vm_name: foo
+vm_user: user
+vm_password: password
+vm_sshkeys:
+  - 'ssh-rsa XXX...XXX user@localhost'
+vm_ipconfig0: 'ip=192.168.0.10/24,gw=192.168.0.254'
+vm_nameserver: '8.8.8.8 8.8.4.4'

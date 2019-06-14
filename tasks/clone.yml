@@ -1,0 +1,20 @@
+---
+# tasks file for proxmox-vm
+# tags: up
+- name: clone VM from template
+  proxmox_kvm:
+    api_host: "{{ proxmox_host }}"
+    api_user: "{{ proxmox_user }}"
+    api_password: "{{ proxmox_password }}"
+    validate_certs: "{{ proxmox_validate_certs }}"
+    node: "{{ node }}"
+    clone: "{{ template_name }}"
+    vmid: "{{ template_vmid|default(omit) }}"
+    name: "{{ vm_name|default(omit) }}"
+    newid: "{{ vm_vmid|default(omit) }}"
+    full: "{{ template_full }}"
+  register: results
+- name: wait clone
+  pause:
+    seconds: "{{ wait_clone|default(default_wait) }}"
+  when: results.changed

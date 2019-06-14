@@ -1,0 +1,17 @@
+---
+# tasks file for proxmox-vm
+# tags: destroy
+- name: remove VM
+  proxmox_kvm:
+    api_host: "{{ proxmox_host }}"
+    api_user: "{{ proxmox_user }}"
+    api_password: "{{ proxmox_password }}"
+    node: "{{ node }}"
+    name: "{{ vm_name|default(omit) }}"
+    vmid: "{{ vm_vmid|default(omit) }}"
+    state: absent
+  register: results
+- name: wait remove
+  pause:
+    seconds: "{{ wait_remove|default(default_wait) }}"
+  when: results.changed

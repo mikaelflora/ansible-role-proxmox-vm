@@ -1,0 +1,84 @@
+---
+# tasks file for proxmox-vm
+# tags: up, reload
+- name: authenticate
+  uri:
+    url: "https://{{ proxmox_host }}:8006/api2/json/access/ticket"
+    validate_certs: "{{ proxmox_validate_certs }}"
+    method: POST
+    body_format: form-urlencoded
+    body:
+      username: "{{ proxmox_user }}"
+      password: "{{ proxmox_password }}"
+  register: auth
+- name: update memory and cpu
+  proxmox_kvm:
+    api_host: "{{ proxmox_host }}"
+    api_user: "{{ proxmox_user }}"
+    api_password: "{{ proxmox_password }}"
+    node: "{{ node}}"
+    name: "{{ vm_name|default(omit) }}"
+    vmid: "{{ vm_vmid|default(omit) }}"
+    cores: "{{ vm_cores|default(omit) }}"
+    sockets: "{{ vm_sockets|default(omit) }}"
+    memory: "{{ vm_memory|default(omit) }}"
+    update: yes
+  when: vm_cores   is defined or
+        vm_sockets is defined or
+        vm_memory  is defined
+- name: get VMID
+  proxmox_kvm:
+    api_host: "{{ proxmox_host }}"
+    api_user: "{{ proxmox_user }}"
+    api_password: "{{ proxmox_password }}"
+    node: "{{ node}}"
+    name: "{{ vm_name }}"
+    state: current
+  register: status
+  when: vm_vmid is not defined
+- name: set fact VMID
+  set_fact:
+    vm_vmid: "{{ status.msg | regex_replace('.*vmid = ([1-9][0-9]{0,3}).*', '\\1') }}"
+  when: vm_vmid is not defined
+- name: resize disk
+  uri:
+    url: "https://{{ proxmox_host }}:8006/api2/json/nodes/{{ node }}/qemu/{{ vm_vmid }}/resize"
+    validate_certs: "{{ proxmox_validate_certs }}"
+    method: PUT
+    headers: 
+      Cookie: "PVEAuthCookie={{ auth.json.data.ticket }}"
+      CSRFPreventionToken: "{{ auth.json.data.CSRFPreventionToken }}"
+    body_format: form-urlencoded
+    body:
+      disk: "{{ vm_diskname }}"
+      size: "{{ vm_disksize }}"
+  when: vm_diskname is defined and
+        vm_disksize is defined
+- name: format vm_sshkeys
+  set_fact:
+    vm_sshkeys: "{{ vm_sshkeys|join('\n') }}"
+  when: vm_sshkeys is defined
+- name: setup network and system via cloud-init
+  uri:
+    url: "https://{{ proxmox_host }}:8006/api2/json/nodes/{{ node }}/qemu/{{ vm_vmid }}/config"
+    validate_certs: "{{ proxmox_validate_certs }}"
+    method: POST
+    headers: 
+      Cookie: "PVEAuthCookie={{ auth.json.data.ticket }}"
+      CSRFPreventionToken: "{{ auth.json.data.CSRFPreventionToken }}"
+    body_format: form-urlencoded
+    body:
+      ciuser: "{{ vm_user|default(omit) }}"
+      cipassword: "{{ vm_password|default(omit)|urlencode|replace('/','%2F') }}"
+      sshkeys: "{{ vm_sshkeys|default(omit)|urlencode|replace('/','%2F') }}"
+      ipconfig0: "{{ vm_ipconfig0|default(omit) }}"
+      nameserver: "{{ vm_nameserver|default(omit) }}"
+      searchdomain: "{{ vm_searchdomain|default(omit) }}"
+  when: vm_user         is defined or
+        vm_sshkeys      is defined or
+        vm_ipconfig0    is defined or
+        vm_nameserver   is defined or
+        vm_searchdomain is defined
+- name: wait configuration
+  pause:
+    seconds: "{{ wait_configuration|default(default_wait) }}"
